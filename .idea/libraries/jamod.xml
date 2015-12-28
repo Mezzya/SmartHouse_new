@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jamod">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jamod.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
