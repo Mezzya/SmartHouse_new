@@ -54,6 +54,8 @@ public class TestModbus {
         //5. Prepare a request
         //req = new ReadInputRegistersRequest(ref, count);
         ReadCoilsRequest reqCoils = new ReadCoilsRequest(0, 8);
+
+
         reqCoils.setUnitID(2);
         reqCoils.setHeadless();
 
@@ -68,12 +70,59 @@ public class TestModbus {
         ress = (ReadCoilsResponse) trans.getResponse();
         System.out.println("ALL COINS " + ress.getCoils().toString());
         System.out.println("WHAT " + ress.getCoilStatus(7));
+//        Входы
+
+        ReadInputDiscretesRequest inputReq = new ReadInputDiscretesRequest(0,8);
+        inputReq.setUnitID(2);
+        inputReq.setHeadless();
+        trans = new ModbusSerialTransaction(con);
+
+
+
+            ReadInputDiscretesResponse resss = null;
+        int i=0;
+        BitVector bit = new BitVector(8);
+        while ( i==0)
+        {
+            trans.setRequest(inputReq);
+            trans.execute();
+
+            resss = (ReadInputDiscretesResponse) trans.getResponse();
+
+
+            if (!bit.equals(resss.getDiscretes()) )
+            {
+//                Если поменялось значение
+                System.out.println("INPUTS " + resss.getDiscretes().toString());
+                bit = resss.getDiscretes();
+
+            }
+//            System.out.println("OLD "+ bit.toString()+" SIZE= "+ bit.size());
+//            System.out.println("NEW "+ resss.getDiscretes().toString() +"SIZE= "+ resss.getDiscretes().size());
+
+
+//            ТАДА
+            WriteMultipleCoilsRequest wrreq = new WriteMultipleCoilsRequest(0, resss.getDiscretes());
+            wrreq.setUnitID(2);
+            wrreq.setHeadless();
+
+            trans.setRequest(wrreq);
+            trans.execute();
+
+        }
+
+
+
+
+
 
 
         // TEST WRITE COINS
-        BitVector bit = new BitVector(8);
+//        BitVector bit = new BitVector(8);
         bit.setBit(1, true);
         bit.setBit(3, true);
+        bit.setBit(2, true);
+
 
         WriteMultipleCoilsRequest wrreq = new WriteMultipleCoilsRequest(0, bit);
         wrreq.setUnitID(2);
