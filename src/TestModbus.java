@@ -30,7 +30,7 @@ public class TestModbus {
         int count = 7; //the count of IR's to read
         int repeat = 1; //a loop for repeating the transaction
 
-        portname = "COM4";
+        portname = "COM3";
 
         //2. Set master identifier
         //  ModbusCoupler.createModbusCoupler(null);
@@ -81,24 +81,27 @@ public class TestModbus {
 
             ReadInputDiscretesResponse resss = null;
         int i=0;
-        BitVector bit = new BitVector(8);
+        BitVector bitNew = new BitVector(8);
+        BitVector bitOld = new BitVector(8);
         while ( i==0)
         {
             trans.setRequest(inputReq);
             trans.execute();
 
             resss = (ReadInputDiscretesResponse) trans.getResponse();
+            bitNew = resss.getDiscretes();
 
-
-            if (!bit.equals(resss.getDiscretes()) )
+            if (!bitNew.equals(bitOld))
             {
 //                Если поменялось значение
                 System.out.println("INPUTS " + resss.getDiscretes().toString());
-                bit = resss.getDiscretes();
+             //   bit = resss.getDiscretes();
 
             }
-//            System.out.println("OLD "+ bit.toString()+" SIZE= "+ bit.size());
-//            System.out.println("NEW "+ resss.getDiscretes().toString() +"SIZE= "+ resss.getDiscretes().size());
+            bitOld=bitNew;
+
+            System.out.println("OLD "+ bitOld+" SIZE= "+ bitOld.size()+ " "+bitOld);
+            System.out.println("NEW "+ bitNew +"SIZE= "+ bitNew.size()+ ""+bitNew);
 
 
 //            ТАДА
@@ -108,7 +111,7 @@ public class TestModbus {
 
             trans.setRequest(wrreq);
             trans.execute();
-
+// TUTU
         }
 
 
@@ -119,17 +122,17 @@ public class TestModbus {
 
         // TEST WRITE COINS
 //        BitVector bit = new BitVector(8);
-        bit.setBit(1, true);
-        bit.setBit(3, true);
-        bit.setBit(2, true);
+//        bit.setBit(1, true);
+//        bit.setBit(3, true);
+//        bit.setBit(2, true);
 
 
-        WriteMultipleCoilsRequest wrreq = new WriteMultipleCoilsRequest(0, bit);
-        wrreq.setUnitID(2);
-        wrreq.setHeadless();
-
-        trans.setRequest(wrreq);
-        trans.execute();
+//        WriteMultipleCoilsRequest wrreq = new WriteMultipleCoilsRequest(0, bit);
+//        wrreq.setUnitID(2);
+//        wrreq.setHeadless();
+//
+//        trans.setRequest(wrreq);
+//        trans.execute();
 
 
         //8. Close the connection
